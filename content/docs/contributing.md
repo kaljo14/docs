@@ -36,7 +36,7 @@ npm run dev
 
 The dependency-free checker verifies required page metadata, Fumadocs page-tree coverage, local routes, and allowed source paths. `check:sources` additionally checks that referenced files exist in the sibling checkouts. Review the rendered sidebar, tables, code blocks, light/dark themes, and mobile layout before publishing.
 
-The current environment cannot resolve the npm registry, so it cannot install the new framework packages or generate a complete lockfile. Run `npm install` in a network-enabled environment and commit the generated lockfile; CI will then use `npm ci`. Until `npm run build` succeeds, do not describe the app as build-verified.
+Commit `package-lock.json` when dependencies change so CI can use `npm ci`. Run `npm run build` before publishing. The production build was verified on 2026-10-07 with `npm run build -- --webpack`.
 
 ## Internal publication
 

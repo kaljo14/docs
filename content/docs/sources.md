@@ -28,6 +28,6 @@ Every page includes `source_files` frontmatter. These paths are relative to the 
 - No production databases, imports, deployments, or authentication settings were changed.
 - No local `.env` contents or raw scraped datasets were copied.
 - No other sibling project directories were inspected.
-- The app and content have been migrated to Fumadocs. This environment currently cannot resolve `registry.npmjs.org`, so dependency installation, lockfile generation, and the application build remain unverified until registry access returns.
+- The app and content have been migrated to Fumadocs. Dependencies and a lockfile are present, and the production build passed on 2026-10-07 with `npm run build -- --webpack`.
 
 Repository declarations do not prove that a source is populated, that a pinned image matches the current local code, or that the cluster has reconciled the latest Git revision. Pages call out those distinctions where they affect operations.
