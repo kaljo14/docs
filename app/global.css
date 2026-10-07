@@ -2,18 +2,154 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
+@theme {
+  --color-fd-background: #fffcf8;
+  --color-fd-foreground: #28211b;
+  --color-fd-muted: #f8f1e9;
+  --color-fd-muted-foreground: #706258;
+  --color-fd-popover: #fffdf9;
+  --color-fd-popover-foreground: #28211b;
+  --color-fd-card: #fff9f2;
+  --color-fd-card-foreground: #28211b;
+  --color-fd-border: #e8d6c4;
+  --color-fd-primary: #b9470b;
+  --color-fd-primary-foreground: #fff;
+  --color-fd-secondary: #f7e9da;
+  --color-fd-secondary-foreground: #66320f;
+  --color-fd-accent: #fff0dc;
+  --color-fd-accent-foreground: #723511;
+  --color-fd-ring: #db762f;
+}
+
+.dark {
+  --color-fd-background: #1d1916;
+  --color-fd-foreground: #f8eee5;
+  --color-fd-muted: #29211c;
+  --color-fd-muted-foreground: #c4b1a1;
+  --color-fd-popover: #26201b;
+  --color-fd-popover-foreground: #f8eee5;
+  --color-fd-card: #29211b;
+  --color-fd-card-foreground: #f8eee5;
+  --color-fd-border: #574031;
+  --color-fd-primary: #fb923c;
+  --color-fd-primary-foreground: #2d1707;
+  --color-fd-secondary: #35271e;
+  --color-fd-secondary-foreground: #f8eee5;
+  --color-fd-accent: #412a1b;
+  --color-fd-accent-foreground: #fed7aa;
+  --color-fd-ring: #fb923c;
+}
+
+.dark #nd-sidebar {
+  --color-fd-muted: #30251e;
+  --color-fd-secondary: #39291f;
+  --color-fd-muted-foreground: #c4b1a1;
+}
+
 :root {
-  --color-fd-primary: #236b57;
   --fd-nav-height: 3.75rem;
+  --fd-layout-width: 1480px;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.prose h1,
-.prose h2,
-.prose h3 {
+::selection {
+  color: #652b0a;
+  background: #fed7aa;
+}
+
+.handbook-title {
+  font-size: clamp(2rem, 3vw, 2.65rem);
+  font-weight: 720;
+  letter-spacing: -0.045em;
+  line-height: 1.12;
+}
+
+.handbook-title::before {
+  display: block;
+  width: 2.5rem;
+  height: 0.2rem;
+  margin-bottom: 1.1rem;
+  border-radius: 999px;
+  background: var(--color-fd-primary);
+  content: '';
+}
+
+.handbook-description {
+  max-width: 58ch;
+  line-height: 1.6;
+}
+
+.handbook-body {
+  line-height: 1.75;
+}
+
+.handbook-body h2,
+.handbook-body h3 {
   letter-spacing: -0.025em;
 }
 
-.prose table {
+.handbook-body h2 {
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--color-fd-border);
+}
+
+.handbook-body a {
+  text-decoration-color: color-mix(in srgb, var(--color-fd-primary) 45%, transparent);
+  text-underline-offset: 3px;
+}
+
+.handbook-body a:hover {
+  text-decoration-color: var(--color-fd-primary);
+}
+
+.handbook-body table {
+  overflow: hidden;
+  border: 1px solid var(--color-fd-border);
+  border-radius: 0.75rem;
   font-size: 0.93rem;
+}
+
+.handbook-body thead {
+  background: var(--color-fd-accent);
+}
+
+.handbook-body blockquote {
+  padding: 0.75rem 1rem;
+  border-inline-start-color: var(--color-fd-primary);
+  border-radius: 0.5rem;
+  background: var(--color-fd-accent);
+}
+
+.handbook-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.9rem;
+}
+
+.handbook-card {
+  min-height: 8.5rem;
+  border-color: var(--color-fd-border);
+  box-shadow: 0 12px 28px -24px #713b17;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.handbook-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-fd-primary);
+  box-shadow: 0 18px 30px -23px #713b17;
+}
+
+@media (max-width: 900px) {
+  .handbook-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .handbook-card {
+    transition: none;
+  }
+
+  .handbook-card:hover {
+    transform: none;
+  }
 }

@@ -7,13 +7,15 @@ source_files:
   - map-infra/kustomization.yaml
 ---
 
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
 Lonctus is a location intelligence application centered on Sofia. It combines business locations, property listings, transport, population, pedestrian movement, and planning data in an interactive map. The engineering work is split across three repositories.
 
-| Repository | Owns | Start reading |
-| --- | --- | --- |
-| **my-map** | Vue application, MapLibre rendering, map interactions, filters, and API clients | [Frontend overview](/my-map/overview) |
-| **neofyis-geopulse** | Go API, PostGIS migrations, spatial queries, imports, and an MCP client bridge | [Backend overview](/neofyis-geopulse/overview) |
-| **map-infra** | Kubernetes manifests, service routing, Envoy authentication, GitOps, and observability | [Infrastructure overview](/map-infra/overview) |
+<Cards className="handbook-cards">
+  <Card className="handbook-card" title="my-map" description="Vue, MapLibre, map interactions, filters, and API clients." href="/my-map/overview" />
+  <Card className="handbook-card" title="neofyis-geopulse" description="Go API, PostGIS, spatial queries, imports, and the MCP bridge." href="/neofyis-geopulse/overview" />
+  <Card className="handbook-card" title="map-infra" description="Kubernetes routing, authentication, GitOps, and observability." href="/map-infra/overview" />
+</Cards>
 
 ## First day
 

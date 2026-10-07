@@ -35,9 +35,9 @@ export default async function Page(props: {
   const MDX = page.data.body;
   return (
     <DocsPage toc={page.data.toc}>
-      <DocsTitle>{page.data.title}</DocsTitle>
-      <DocsDescription>{page.data.description}</DocsDescription>
-      <DocsBody>
+      <DocsTitle className="handbook-title">{page.data.title}</DocsTitle>
+      <DocsDescription className="handbook-description">{page.data.description}</DocsDescription>
+      <DocsBody className="handbook-body">
         <MDX components={defaultMdxComponents} />
       </DocsBody>
     </DocsPage>
