@@ -1,0 +1,14 @@
+{
+  "title": "Engineering handbook",
+  "pages": [
+    "index",
+    "architecture",
+    "local-development",
+    "sources",
+    "my-map",
+    "neofyis-geopulse",
+    "map-infra",
+    "operations",
+    "contributing"
+  ]
+}

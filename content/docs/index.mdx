@@ -1,0 +1,37 @@
+---
+title: Lonctus engineering handbook
+description: Understand the frontend, geospatial backend, and infrastructure that power Lonctus.
+source_files:
+  - my-map/src/components/InteractiveMap.vue
+  - neofyis-geopulse/cmd/main.go
+  - map-infra/kustomization.yaml
+---
+
+Lonctus is a location intelligence application centered on Sofia. It combines business locations, property listings, transport, population, pedestrian movement, and planning data in an interactive map. The engineering work is split across three repositories.
+
+| Repository | Owns | Start reading |
+| --- | --- | --- |
+| **my-map** | Vue application, MapLibre rendering, map interactions, filters, and API clients | [Frontend overview](/my-map/overview) |
+| **neofyis-geopulse** | Go API, PostGIS migrations, spatial queries, imports, and an MCP client bridge | [Backend overview](/neofyis-geopulse/overview) |
+| **map-infra** | Kubernetes manifests, service routing, Envoy authentication, GitOps, and observability | [Infrastructure overview](/map-infra/overview) |
+
+## First day
+
+1. Read [how the system fits together](/architecture).
+2. Follow [local development](/local-development) to start the database, backend, tile server, and frontend.
+3. Read the guide for the repository you are changing.
+4. Check [known integration gaps](/operations/known-gaps) before assuming every backend capability has a frontend control or production route.
+
+## Find the right change
+
+| You want to… | Likely starting point |
+| --- | --- |
+| Add a map layer or change its appearance | `my-map/src/composables/`, then `src/stores/layerStore.ts` |
+| Add an API operation | `neofyis-geopulse/typespec/main.tsp`, then handler/app/store |
+| Change a spatial model or tile view | `neofyis-geopulse/migrations/`, then Martin configuration and map styling |
+| Change routing, runtime environment, or image revisions | `map-infra/apps/` |
+| Investigate a blank map, 401, or stale data | [Troubleshooting](/operations/troubleshooting) |
+
+## What this handbook describes
+
+These pages describe inspected code and manifests, not a live cluster audit. Sources were reviewed on **2026-10-07**; the [source snapshot](/sources) identifies the exact revisions. Only the three repositories above were inspected. Credentials, local environment files, and scraped datasets are not part of this handbook.

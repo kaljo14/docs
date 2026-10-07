@@ -1,0 +1,35 @@
+{
+  "name": "lonctus-internal-docs",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Internal engineering documentation for my-map, map-infra, and neofyis-geopulse",
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1 --port 3001",
+    "build": "npm run check && next build",
+    "start": "next start --hostname 127.0.0.1 --port 3001",
+    "check": "node scripts/check-docs.mjs",
+    "check:sources": "node scripts/check-docs.mjs --sources",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "fumadocs-core": "16.15.18",
+    "fumadocs-mdx": "15.4.6",
+    "fumadocs-ui": "16.15.18",
+    "next": "16.4.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/mdx": "^2.0.13",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tailwindcss": "4.3.3",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.20.0"
+  }
+}
