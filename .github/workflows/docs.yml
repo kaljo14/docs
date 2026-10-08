@@ -25,8 +25,13 @@ jobs:
         with:
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm ci
+        run: npm install
       - run: npm run build
+        env:
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.CLERK_PUBLISHABLE_KEY }}
+          NEXT_PUBLIC_CLERK_SIGN_IN_URL: /sign-in
+          NEXT_PUBLIC_CLERK_SIGN_IN_FALLBACK_REDIRECT_URL: /
+          NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: /
 
   publish:
     needs: build
@@ -60,6 +65,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          build-args: |
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.CLERK_PUBLISHABLE_KEY }}
           platforms: linux/amd64,linux/arm64
           push: true
           tags: kaljo14/docs:${{ steps.version.outputs.version }}

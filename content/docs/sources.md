@@ -23,6 +23,10 @@ deployment changes. They now describe Flux/Renovate and the desired
 `docs.lonctus.com` route. These are checked-in configuration changes, not evidence
 of a live docs rollout; unrelated source snapshots below retain their original scope.
 
+The docs deployment description was updated on **2026-10-08** against the local
+`map-infra/apps/docs` manifests and docs app Clerk route guards. It describes
+checked-in configuration, not a verified production sign-in or rollout.
+
 | Repository | Inspected revision | Subject |
 | --- | --- | --- |
 | `my-map` | `b360419` | Complete MapLibre migration and lifecycle cleanup |

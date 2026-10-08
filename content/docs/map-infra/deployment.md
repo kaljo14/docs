@@ -55,9 +55,10 @@ Publish a new stable semantic image tag, then review Renovate's version/digest u
 ## Docs deployment
 
 The docs Deployment serves Next.js on port 3001 through a ClusterIP Service.
-Traefik routes `https://docs.lonctus.com` to it and requires BasicAuth for every
-path. Provision `docs-basic-auth` separately, point DNS at the production ingress,
-and ensure the `letsencrypt-prod` ClusterIssuer can issue `docs-tls`.
+Traefik routes `https://docs.lonctus.com` to it. The app uses Clerk sessions to
+protect docs pages and search. Provision `docs-clerk` separately, point DNS at
+the production ingress, and ensure the `letsencrypt-prod` ClusterIssuer can issue
+`docs-tls` for HTTPS.
 Private Docker Hub images also need cluster pull credentials. Follow the docs-site
 section of `map-infra/DEPLOYMENT.md` before merging the initial manifests.
 

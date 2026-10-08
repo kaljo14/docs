@@ -7,6 +7,8 @@ Fumadocs documentation for **my-map**, **map-infra**, and **neofyis-geopulse**. 
 Use Node 22.20 or newer (`nvm use`). Install dependencies and run the Next.js development server:
 
 ```bash
+cp .env.example .env.local
+# Replace the example keys with keys from a Clerk development instance.
 npm install
 npm run dev
 ```
@@ -46,17 +48,24 @@ Hub secrets, tag commands, optional Renovate notification, and first-version
 adoption in map-infra. Use a private Docker Hub repository for internal docs;
 provision cluster pull credentials as described in `map-infra/DEPLOYMENT.md`.
 
+Set the docs repository variable `CLERK_PUBLISHABLE_KEY` to the publishable key
+from the same Clerk production instance as `my-map` before running CI or publishing.
+The publishable key is embedded in the browser bundle. The secret key is supplied
+only to the running container through the `docs-clerk` Kubernetes Secret.
+
 The multi-stage Dockerfile uses Next.js standalone output and runs as a non-root
 user on `0.0.0.0:3001`, including the public assets and Next.js static files:
 
 ```bash
-docker build -t lonctus-docs:local .
-docker run --rm -p 127.0.0.1:3001:3001 lonctus-docs:local
+docker build --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" -t lonctus-docs:local .
+docker run --rm -p 127.0.0.1:3001:3001 \
+  -e NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY -e CLERK_SECRET_KEY \
+  -e CLERK_SIGN_IN_URL=/sign-in lonctus-docs:local
 ```
 
 `map-infra/apps/docs` defines the Service, Deployment, and TLS ingress for
-`https://docs.lonctus.com`, protected by Traefik BasicAuth across all paths.
-Provision DNS, the `docs-basic-auth` secret, and registry pull access before
+`https://docs.lonctus.com`. Clerk checks each docs page and the search API.
+Provision DNS, the `docs-clerk` secret, and registry pull access before
 deployment, following the docs-site section in `map-infra/DEPLOYMENT.md`.
 `private: true`, `noindex`, and `robots.txt` do not enforce access control.
 

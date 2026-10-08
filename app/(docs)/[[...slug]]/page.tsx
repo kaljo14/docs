@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { auth } from '@clerk/nextjs/server';
 import defaultMdxComponents from 'fumadocs-ui/mdx';
 import {
   DocsBody,
@@ -8,13 +9,13 @@ import {
 } from 'fumadocs-ui/layouts/docs/page';
 import { source } from '@/lib/source';
 
-export function generateStaticParams() {
-  return source.generateParams();
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata(props: {
   params: Promise<{ slug?: string[] }>;
 }) {
+  await auth.protect();
+
   const { slug } = await props.params;
   const page = source.getPage(slug ?? []);
   if (!page) return {};
@@ -28,6 +29,8 @@ export async function generateMetadata(props: {
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
 }) {
+  await auth.protect();
+
   const { slug } = await props.params;
   const page = source.getPage(slug ?? []);
   if (!page) notFound();

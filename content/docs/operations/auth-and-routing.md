@@ -10,6 +10,8 @@ source_files:
   - map-infra/apps/places-scraper/envoy-config.yaml
   - map-infra/apps/martin/envoy-config.yaml
   - map-infra/apps/tileserver/envoy-config.yaml
+  - map-infra/apps/docs/deployment.yaml
+  - map-infra/apps/docs/ingress.yaml
   - neofyis-geopulse/cmd/main.go
 ---
 
@@ -18,6 +20,13 @@ source_files:
 Clerk owns sign-in and session tokens. The Vue router requires a loaded, signed-in session for `/map`. REST calls through `httpClient.ts` await `session.getToken()` and attach `Authorization: Bearer ...`. MapLibre tile requests use the synchronous cached-token accessor from `auth.ts`.
 
 The map's `transformRequest` only attaches that header for resources identified as tiles whose URL contains `/api/`. Direct diagnostic `fetch` calls, such as the Martin catalog check, do not inherit those headers automatically.
+
+## Docs access
+
+The docs app checks the Clerk session on each documentation page and on its
+`/api/search` route. Its sign-in page is public. The docs ingress keeps TLS through
+cert-manager and does not use Envoy's Bearer-token check; browser page loads rely
+on the Clerk session cookie. The checked-in access rule requires a signed-in user.
 
 ## Proxy routing
 
