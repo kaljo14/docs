@@ -1,0 +1,12 @@
+.git
+.github
+node_modules
+.next
+.source
+.cache
+out
+.env
+.env.*
+*.tsbuildinfo
+npm-debug.log*
+.DS_Store

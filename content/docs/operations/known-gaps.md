@@ -15,6 +15,8 @@ source_files:
   - map-infra/apps/places-scraper/envoy-config.yaml
   - map-infra/apps/martin/deployment.yaml
   - map-infra/kustomization.yaml
+  - map-infra/apps/frontend/kustomization.yaml
+  - map-infra/apps/martin/kustomization.yaml
 ---
 
 These are observations from the [source snapshot](/sources), not fixes made by this docs repository. Reverify them before changing production.
@@ -25,7 +27,7 @@ These are observations from the [source snapshot](/sources), not fixes made by t
 | Envoy RBAC filters are commented out | README role descriptions are not active role enforcement | Define intended read/write policy and test it before enabling |
 | nginx caches Martin by `$uri` before downstream JWT validation | Cache hits can bypass that validation; query/user variants share the configured key | Review auth placement, cache policy, and data sensitivity |
 | Go listens on `:8080`; no NetworkPolicy is listed | Sidecar Service routing alone is not complete isolation of app ports | Verify cluster networking and enforce the intended boundary |
-| Some Services have no explicit namespace; Kustomize has no namespace transformer | Manual apply can separate Services from workloads | Standardize namespace handling or use the verified Argo path |
+| Some individual Services omit an explicit namespace; application Kustomize bundles now assign `lonctus` | Applying files individually bypasses bundle namespace assignment | Render and deploy the Kustomize bundles through Flux |
 | Frontend proxy lacks `/api/bgproperties-locations` | Backend's latest listing endpoint is not connected through the frontend origin | Add client, proxy routes, and map UI when implementing the feature |
 | Other backend routes such as saturation/import/job triggers lack frontend proxy families | Backend availability does not imply browser-origin availability | Add only the routes needed by the intended UI/workflow |
 | Vite and nginx differ in explicit `/api/tiles` rewriting | Optional TileServer paths can behave differently across environments | Align routing when bringing that path back into use |

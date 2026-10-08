@@ -11,6 +11,7 @@ source_files:
   - map-infra/apps/frontend/deployment.yaml
   - map-infra/apps/martin/deployment.yaml
   - map-infra/apps/places-scraper/deployment.yaml
+  - map-infra/clusters/production/workloads.yaml
 ---
 
 ## Repository boundaries
@@ -27,7 +28,7 @@ Browser ──> my-map ──┼── Photon (geocoding)
                                      |          ├── GeoPulse queries
                               data imports      └── Martin tile queries
 
-map-infra (Kustomize + Argo CD) deploys my-map, GeoPulse, and Martin.
+map-infra (Kustomize + Flux CD) deploys my-map, GeoPulse, Martin, and docs.
 ```
 
 `my-map` is a Vue SPA. MapLibre draws the basemap and native vector/GeoJSON layers; deck.gl draws clustered business locations. GeoPulse returns domain data and runs imports. Martin reads spatial tables/views and produces vector tiles directly from PostGIS.

@@ -8,7 +8,8 @@ source_files:
   - neofyis-geopulse/cmd/main.go
   - neofyis-geopulse/internal/app/app.go
   - map-infra/apps/martin/martin-config.yaml
-  - map-infra/argocd/application.yaml
+  - map-infra/clusters/production/flux-system/gotk-sync.yaml
+  - map-infra/clusters/production/workloads.yaml
 ---
 
 ## Frontend will not start
@@ -67,6 +68,6 @@ Verify the import completion log, base-table rows, and affected materialized-vie
 
 ## Changes disappear after manual operations
 
-Argo CD self-heal can restore desired Git state. Compare the Application's target branch/revision with the manifest change and the pinned image digest. A pushed image does not update a digest-pinned Deployment; a `kubectl` edit is not durable GitOps configuration.
+Flux reconciliation can restore desired Git state. Compare the GitRepository revision and Kustomization status with the manifest change and the pinned image digest. A pushed image does not update a digest-pinned Deployment until Renovate's update PR is merged; a `kubectl` edit is not durable GitOps configuration.
 
-If a Service cannot be resolved by name, inspect namespaces. Some Service manifests omit a namespace and can land outside `lonctus` when applied manually with the wrong default.
+If a Service cannot be resolved by name, inspect namespaces. Application Kustomize bundles assign `lonctus`; applying individual files that omit a namespace can bypass that assignment.

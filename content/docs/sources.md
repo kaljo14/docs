@@ -6,9 +6,18 @@ source_files:
   - my-map/docs/maplibre-migration.md
   - neofyis-geopulse/cmd/main.go
   - map-infra/kustomization.yaml
+  - map-infra/clusters/production/workloads.yaml
+  - map-infra/apps/docs/deployment.yaml
+  - map-infra/apps/docs/ingress.yaml
 ---
 
 This handbook was authored from the three named local checkouts on **2026-10-07**.
+
+On **2026-10-08**, the infrastructure deployment, overview, and troubleshooting
+sections were refreshed against `map-infra` revision `5be0b49` plus local docs
+deployment changes. They now describe Flux/Renovate and the desired
+`docs.lonctus.com` route. These are checked-in configuration changes, not evidence
+of a live docs rollout; unrelated source snapshots below retain their original scope.
 
 | Repository | Inspected revision | Subject |
 | --- | --- | --- |

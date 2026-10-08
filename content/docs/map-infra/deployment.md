@@ -2,7 +2,12 @@
 title: Deployment and release workflow
 description: Build artifacts, review manifest changes, reconcile configuration, and verify releases.
 source_files:
-  - map-infra/argocd/application.yaml
+  - map-infra/clusters/production/flux-system/gotk-sync.yaml
+  - map-infra/clusters/production/workloads.yaml
+  - map-infra/apps/docs/deployment.yaml
+  - map-infra/apps/docs/ingress.yaml
+  - map-infra/renovate.json
+  - map-infra/DEPLOYMENT.md
   - map-infra/kustomization.yaml
   - map-infra/apps/frontend/deployment.yaml
   - map-infra/apps/places-scraper/deployment.yaml
@@ -20,7 +25,8 @@ source_files:
 | --- | --- | --- |
 | `my-map` | GitHub Actions builds/pushes multiarch frontend images on `main` | Digest in `apps/frontend/deployment.yaml` |
 | `neofyis-geopulse` | `deploy.sh` builds/pushes `kaljo14/places-scraper` | Digest in `apps/places-scraper/deployment.yaml` |
-| `map-infra` | Rendered Kubernetes resources | Argo CD reconciliation of `main` |
+| Docs | GitHub Actions publishes `kaljo14/docs:latest` and Git SHA tags for AMD64/ARM64 | `apps/docs/deployment.yaml`, updated by Renovate |
+| `map-infra` | Rendered Kubernetes resources | Flux CD reconciliation of `main` |
 
 GeoPulse's `deploy.sh` also creates and pushes a Git version tag. It is a publishing operation, not a local build check. Use `go build ./...` for compilation without publishing.
 
@@ -40,18 +46,32 @@ From `map-infra`:
 kubectl kustomize . > /tmp/lonctus-manifests.yaml
 ```
 
-Review images, environment names, ConfigMaps, namespaces, selectors, and Service ports. The output contains mixed explicit and implicit namespaces; ensure the deployment path assigns the latter to `lonctus` rather than an arbitrary kubectl default. Check [known gaps](/operations/known-gaps) for current cross-repository inconsistencies.
+Review images, environment names, ConfigMaps, namespaces, selectors, and Service ports. Application bundles assign `lonctus`; the monitoring bundle assigns `monitoring`. Check [known gaps](/operations/known-gaps) for current cross-repository inconsistencies.
 
-Commit the intended manifests to the branch watched by Argo CD through the team's review flow. Publishing the application image alone does not change the pinned production digest.
+Publish the tracked `latest` image, then review Renovate's digest update PR and merge it to `main`. Flux reconciles the merged manifests. Publishing the application image alone does not change an already pinned production digest; automatic merge is disabled.
+
+## Docs deployment
+
+The docs Deployment serves Next.js on port 3001 through a ClusterIP Service.
+Traefik routes `https://docs.lonctus.com` to it and requires BasicAuth for every
+path. Provision `docs-basic-auth` separately, point DNS at the production ingress,
+and ensure the `letsencrypt-prod` ClusterIssuer can issue `docs-tls`.
+Private Docker Hub images also need cluster pull credentials. Follow the docs-site
+section of `map-infra/DEPLOYMENT.md` before merging the initial manifests.
+
+The initial `latest` tag has no digest until an image exists and Renovate pins it.
+Merge the initial pin before relying on reproducible image rollbacks.
 
 ## Verify a reconciled release
 
 These commands inspect state; they do not trigger a deployment:
 
 ```bash
-kubectl get application map-infra -n argocd
+flux get sources git
+flux get kustomizations
 kubectl get deployments,pods,services,ingresses -n lonctus
 kubectl rollout status deployment/frontend -n lonctus
+kubectl rollout status deployment/docs -n lonctus
 kubectl rollout status deployment/places-scraper -n lonctus
 kubectl rollout status deployment/martin -n lonctus
 kubectl logs deployment/places-scraper -n lonctus -c places-scraper --tail=100
