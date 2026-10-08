@@ -23,7 +23,7 @@ npm run build          # Checks plus the Next.js production build
 npm start              # Serve the built app on localhost:3001
 ```
 
-`check:sources` expects this checkout beside the three source repositories. The app uses Fumadocs MDX for local Markdown and MDX, with its content stored in `content/docs`. The `meta.json` files define the sidebar order and repository group names. CI builds pull requests; successful builds on `main` also publish the Docker image.
+`check:sources` expects this checkout beside the three source repositories. The app uses Fumadocs MDX for local Markdown and MDX, with its content stored in `content/docs`. The `meta.json` files define the sidebar order and repository group names. CI builds pull requests and `main`; successful `vMAJOR.MINOR.PATCH` tag builds publish the Docker image.
 
 ## Content
 
@@ -39,19 +39,12 @@ npm start              # Serve the built app on localhost:3001
 
 ## Docker Hub and Flux deployment
 
-The workflow publishes `kaljo14/docs:latest` and `kaljo14/docs:<git-sha>` for
-`linux/amd64` and `linux/arm64`. Add `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`
-to this repository's GitHub Actions secrets, with write access to `kaljo14/docs`.
-Create that Docker Hub repository before the first build. Use a private repository
-to restrict access to the internal documentation packaged in the image; configure
-cluster pull credentials as described in `map-infra/DEPLOYMENT.md`.
-
-Optionally add `MAP_INFRA_DISPATCH_TOKEN`, scoped to `kaljo14/map-infra` with
-Contents write access. After publishing, the workflow requests a Renovate scan.
-Without this token, map-infra's scheduled scan still finds new images. Renovate
-opens a digest-update PR; merging it lets Flux roll out the new docs version.
-Publish the initial image before merging the infra manifests. The initial mutable
-`latest` reference is pinned by Renovate's first PR.
+The workflow publishes `kaljo14/docs:MAJOR.MINOR.PATCH` for `linux/amd64` and
+`linux/arm64` when a stable Git tag such as `v1.2.3` is pushed. Main-branch builds
+do not publish. See [Semantic image releases](RELEASE.md) for the required Docker
+Hub secrets, tag commands, optional Renovate notification, and first-version
+adoption in map-infra. Use a private Docker Hub repository for internal docs;
+provision cluster pull credentials as described in `map-infra/DEPLOYMENT.md`.
 
 The multi-stage Dockerfile uses Next.js standalone output and runs as a non-root
 user on `0.0.0.0:3001`, including the public assets and Next.js static files:

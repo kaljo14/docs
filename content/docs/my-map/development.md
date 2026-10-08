@@ -44,4 +44,4 @@ npm run build
 
 The build runs `vue-tsc -b` before Vite. The regression suite uses Node's module mocks and requires the documented Node version. The existing ESLint configuration needs separate repair: it scans generated output and does not parse the TypeScript source correctly.
 
-The frontend CI workflow builds/pushes amd64 and arm64 images on `main`, tagged `latest` and the Git SHA. Clerk's publishable key is passed as a build argument; changing it requires rebuilding the frontend. Runtime upstream URLs are nginx environment variables. `map-infra` pins the deployed frontend by digest, so pushing a new image does not by itself select it for deployment.
+The frontend CI workflow builds on `main` and publishes amd64 and arm64 images only for stable Git tags such as `v1.2.3`, producing `kaljo14/my-map:1.2.3`. Clerk's publishable key is passed as a build argument; changing it requires rebuilding the frontend. Runtime upstream URLs are nginx environment variables. `map-infra` pins the deployed frontend by digest, so pushing a new image does not by itself select it for deployment.

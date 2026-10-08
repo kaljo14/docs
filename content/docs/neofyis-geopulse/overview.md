@@ -4,6 +4,7 @@ description: Go service architecture, boot sequence, configuration, and developm
 source_files:
   - neofyis-geopulse/go.mod
   - neofyis-geopulse/cmd/main.go
+  - neofyis-geopulse/.github/workflows/ci.yml
   - neofyis-geopulse/internal/config/config.go
   - neofyis-geopulse/internal/app/app.go
   - neofyis-geopulse/internal/handler/handler.go
@@ -71,4 +72,4 @@ These names come from `internal/config/config.go`. In particular, `GOOGLE_API_KE
 | `make mock` | Regenerates mocks with mockery |
 | `make mcp-server` | Builds the stdio MCP executable |
 
-Code generators are separate tools; install the versions appropriate to the repository before regeneration. CI builds, tests, and lints on pull requests and pushes to `main`. It does not run the HTTP contract suite or publish the backend image.
+Code generators are separate tools; install the versions appropriate to the repository before regeneration. CI builds, tests, and lints on pull requests and pushes to `main`. It does not run the HTTP contract suite. Stable `vMAJOR.MINOR.PATCH` tag pushes run the CI checks and then publish the backend image as `kaljo14/places-scraper:MAJOR.MINOR.PATCH`.

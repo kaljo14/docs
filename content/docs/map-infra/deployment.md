@@ -8,6 +8,8 @@ source_files:
   - map-infra/apps/docs/ingress.yaml
   - map-infra/renovate.json
   - map-infra/DEPLOYMENT.md
+  - map-infra/scripts/adopt-release.py
+  - neofyis-geopulse/.github/workflows/ci.yml
   - map-infra/kustomization.yaml
   - map-infra/apps/frontend/deployment.yaml
   - map-infra/apps/places-scraper/deployment.yaml
@@ -23,12 +25,12 @@ source_files:
 
 | Repository | Artifact path | What selects production |
 | --- | --- | --- |
-| `my-map` | GitHub Actions builds/pushes multiarch frontend images on `main` | Digest in `apps/frontend/deployment.yaml` |
-| `neofyis-geopulse` | `deploy.sh` builds/pushes `kaljo14/places-scraper` | Digest in `apps/places-scraper/deployment.yaml` |
-| Docs | GitHub Actions publishes `kaljo14/docs:latest` and Git SHA tags for AMD64/ARM64 | `apps/docs/deployment.yaml`, updated by Renovate |
+| `my-map` | GitHub Actions builds/pushes multiarch frontend images for stable `vMAJOR.MINOR.PATCH` tags | Digest in `apps/frontend/deployment.yaml` |
+| `neofyis-geopulse` | Tag-triggered CI publishes `kaljo14/places-scraper:MAJOR.MINOR.PATCH` after all checks | Digest in `apps/places-scraper/deployment.yaml` |
+| Docs | GitHub Actions publishes `kaljo14/docs:MAJOR.MINOR.PATCH` for AMD64/ARM64 | `apps/docs/deployment.yaml`, updated by Renovate |
 | `map-infra` | Rendered Kubernetes resources | Flux CD reconciliation of `main` |
 
-GeoPulse's `deploy.sh` also creates and pushes a Git version tag. It is a publishing operation, not a local build check. Use `go build ./...` for compilation without publishing.
+GeoPulse's `deploy.sh v1.2.3` creates and pushes an explicit stable Git tag; CI performs the image build and push after its checks pass. It is a release operation. Use `go build ./...` for compilation without publishing.
 
 ## Before updating manifests
 
@@ -48,7 +50,7 @@ kubectl kustomize . > /tmp/lonctus-manifests.yaml
 
 Review images, environment names, ConfigMaps, namespaces, selectors, and Service ports. Application bundles assign `lonctus`; the monitoring bundle assigns `monitoring`. Check [known gaps](/operations/known-gaps) for current cross-repository inconsistencies.
 
-Publish the tracked `latest` image, then review Renovate's digest update PR and merge it to `main`. Flux reconciles the merged manifests. Publishing the application image alone does not change an already pinned production digest; automatic merge is disabled.
+Publish a new stable semantic image tag, then review Renovate's version/digest update PR and merge it to `main`. Flux reconciles the merged manifests. Publishing the application image alone does not change an already pinned production digest; automatic merge is disabled.
 
 ## Docs deployment
 
@@ -59,8 +61,11 @@ and ensure the `letsencrypt-prod` ClusterIssuer can issue `docs-tls`.
 Private Docker Hub images also need cluster pull credentials. Follow the docs-site
 section of `map-infra/DEPLOYMENT.md` before merging the initial manifests.
 
-The initial `latest` tag has no digest until an image exists and Renovate pins it.
-Merge the initial pin before relying on reproducible image rollbacks.
+To migrate a legacy `latest` reference, first publish a semantic release, then
+run `python3 scripts/adopt-release.py docs <version>` from map-infra. The script
+verifies the published multi-platform image and pins its actual digest. Merge
+that change to start semantic version tracking; existing references are retained
+until this migration is performed.
 
 ## Verify a reconciled release
 

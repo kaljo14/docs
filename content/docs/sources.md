@@ -9,6 +9,10 @@ source_files:
   - map-infra/clusters/production/workloads.yaml
   - map-infra/apps/docs/deployment.yaml
   - map-infra/apps/docs/ingress.yaml
+  - map-infra/renovate.json
+  - map-infra/scripts/adopt-release.py
+  - my-map/.github/workflows/docker-publish.yml
+  - neofyis-geopulse/.github/workflows/ci.yml
 ---
 
 This handbook was authored from the three named local checkouts on **2026-10-07**.
@@ -24,6 +28,11 @@ of a live docs rollout; unrelated source snapshots below retain their original s
 | `my-map` | `b360419` | Complete MapLibre migration and lifecycle cleanup |
 | `map-infra` | `5d65f99` | Fix backend |
 | `neofyis-geopulse` | `ffa38e0` | BulgarianProperties scraper and locations API |
+
+The release sections were also refreshed on **2026-10-08** against local semantic
+release workflow changes in my-map (`b360419`), docs (`c7bde8d`), GeoPulse
+(`381d82a` plus existing local CI edits), and map-infra (`6800985`). Release image
+pushes and live cluster adoption were not performed or verified in this refresh.
 
 ## Evidence order
 
